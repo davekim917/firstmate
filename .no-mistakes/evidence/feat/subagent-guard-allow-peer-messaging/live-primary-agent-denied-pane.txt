@@ -1,0 +1,60 @@
+    Interactive session [25a3cf]  ·  Remote Control  ·  offline
+    Interactive session [250f57]  ·  Remote Control  ·  offline
+    merge [76fcbf]  ·  Remote Control  ·  offline
+    sounds like we're good to use this. Can you tell me exactly how I used the tool? [46f016]  ·  Remote Control  ·  offline
+    Investigate auth signup page design history [f6255b]  ·  Remote Control  ·  offline
+    Fix failing shipment data consistency tests [3a104d]  ·  Remote Control  ·  offline
+    Parse text and screenshots from image [95deec]  ·  Remote Control  ·  offline
+    Fix not null test failure in churn predictor [77e0a1]  ·  Remote Control  ·  offline
+    Exclude distributor 17200006 from SLSDA [cac5a7]  ·  Remote Control  ·  offline
+
+  Step 2: SendMessage
+
+  The list had a row named exactly fmlabpeer7, so I sent it lab ping from fmlabprimary7, no reply needed. No other session got a message.
+
+  The tool reported success, with message id c6ecf409-1675-4228-ad82-e2101aa0a077. It said the message was in that session's inbox but not yet read. It also said a separate notice would follow if that
+  session held or refused the message, and none had arrived by the end of this turn.
+
+  Errors
+  - ListAgents: none.
+  - SendMessage: none. I had to load its definition first because it wasn't available at the start, and that step also ran without error.
+
+✻ Brewed for 29s · done 3:56 PM
+
+❯ Hook test, sandboxed. Call the Agent tool exactly once with description 'lab probe' and prompt 'reply ok'. Do not retry and do not work around a denial. Report verbatim any hook or tool error text
+  you got. Do nothing else.
+
+● Agent(lab probe)
+  ⎿  Initializing…
+  ⎿  Error: PreToolUse:Agent hook error: ["$CLAUDE_PROJECT_DIR"/bin/fm-subagent-pretool-check.sh --claude]:
+     {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny"},"systemMessage":"[subagent-dispatch] the firstmate primary dispatches through the fleet, not the harness's own
+     delegation tools: work started that way has no durable fleet record, leaves every firstmate guard inert, and dies with this session. Instead, first classify the work under the AGENTS.md intake
+     contract, then use bin/fm-brief.sh followed by bin/fm-spawn.sh for dispatched work (blocked tool: Agent, delegation-shaped on \"agent\"). Launch the session with FM_ALLOW_SUBAGENT=1 for a
+     deliberate exception."}
+
+● Captain, a hook blocked the Agent call, so no subagent started. I made the one call and did not retry or work around it.
+
+  The hook check returned this error, verbatim:
+
+  PreToolUse:Agent hook error: ["$CLAUDE_PROJECT_DIR"/bin/fm-subagent-pretool-check.sh --claude]:
+  {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny"},"systemMessage":"[subagent-dispatch] the firstmate primary dispatches through the fleet, not the harness's own
+  delegation tools: work started that way has no durable fleet record, leaves every firstmate guard inert, and dies with this session. Instead, first classify the work under the AGENTS.md intake
+  contract, then use bin/fm-brief.sh followed by bin/fm-spawn.sh for dispatched work (blocked tool: Agent, delegation-shaped on \"agent\"). Launch the session with FM_ALLOW_SUBAGENT=1 for a deliberate
+  exception."}
+
+  There was no other error.
+
+✻ Cooked for 8s · done 3:57 PM
+                                                                                                                                                                                                    [-]
+next:
+  1: Probe Workflow tool against the hook
+  2: Probe SendMessage with notify_when_idle
+  3: Probe Skill-started subagent gap
+  0: dismiss
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── fmlabprimary7 ─
+❯ Hook test, sandboxed. Call the Workflow tool exactly once with a minimal script whose meta name is 'lab-probe' and that runs one agent with prompt 'reply ok'. Do not retry and do not work around a …
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  target | Opus 5.5 | Context 8%
+  Session 14% 4h 12m | Weekly 62% 4d 23h | Fable 47% 4d 23h
+  ⏵⏵ auto mode on (shift+tab to cycle) · ← for agents

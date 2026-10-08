@@ -1,0 +1,34 @@
+# fm-subagent-pretool-check.sh decision matrix, Claude PreToolUse stdin transport (--claude)
+# FM_ROOT = disposable plain checkout; FM_HOME = marked lab home /tmp/fm-lab.YpfKXl; FM_ALLOW_SUBAGENT unset
+TOOL                   BASE     TARGET  
+SendMessage            DENY(2)  ALLOW   
+ListAgents             DENY(2)  ALLOW   
+sendMessage            DENY(2)  ALLOW   
+send_message           DENY(2)  ALLOW   
+SendMessageAndSpawn    DENY(2)  DENY(2) 
+SendMessages           DENY(2)  DENY(2) 
+RemoteSendMessage      DENY(2)  DENY(2) 
+ListAgentsSpawn        DENY(2)  DENY(2) 
+SpawnListAgents        DENY(2)  DENY(2) 
+Agent                  DENY(2)  DENY(2) 
+Task                   DENY(2)  DENY(2) 
+Workflow               DENY(2)  DENY(2) 
+CronCreate             DENY(2)  DENY(2) 
+EnterWorktree          DENY(2)  DENY(2) 
+RemoteTrigger          DENY(2)  DENY(2) 
+Monitor                DENY(2)  DENY(2) 
+TaskCreate             ALLOW    ALLOW   
+TaskStop               ALLOW    ALLOW   
+Read                   ALLOW    ALLOW   
+Bash                   ALLOW    ALLOW   
+
+# escape hatch unchanged: FM_ALLOW_SUBAGENT=1 / =true on target
+FM_ALLOW_SUBAGENT=1 Agent rc=0
+FM_ALLOW_SUBAGENT=1 SendMessageAndSpawn rc=0
+FM_ALLOW_SUBAGENT=true Agent rc=2
+FM_ALLOW_SUBAGENT=true SendMessageAndSpawn rc=2
+
+# sample target deny stderr for SendMessageAndSpawn:
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny"},"systemMessage":"[subagent-dispatch] the firstmate primary dispatches through the fleet, not the harness's own delegation tools: work started that way has no durable fleet record, leaves every firstmate guard inert, and dies with this session. Instead, first classify the work under the AGENTS.md intake contract, then use bin/fm-brief.sh followed by bin/fm-spawn.sh for dispatched work (blocked tool: SendMessageAndSpawn, delegation-shaped on \"spawn\"). Launch the session with FM_ALLOW_SUBAGENT=1 for a deliberate exception."}
+# sample base deny stderr for SendMessage:
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny"},"systemMessage":"[subagent-dispatch] the firstmate primary dispatches through the fleet, not the harness's own delegation tools: work started that way has no durable fleet record, leaves every firstmate guard inert, and dies with this session. Instead, first classify the work under the AGENTS.md intake contract, then use bin/fm-brief.sh followed by bin/fm-spawn.sh for dispatched work (blocked tool: SendMessage, delegation-shaped on \"sendmessage\"). Launch the session with FM_ALLOW_SUBAGENT=1 for a deliberate exception."}
