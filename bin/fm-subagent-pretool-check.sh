@@ -82,8 +82,11 @@ PLAN_ONLY_TOOLS='taskcreate taskupdate'
 # session that already exists and owns its own lifetime: a peer primary, a
 # captain's session, or another fleet's firstmate. Such a recipient is not work
 # this session created, so it has no missing fleet record here and does not die
-# with this session. The one way a send could create work in-session is resuming
-# a subagent this session spawned, which the guard already denied at spawn time.
+# with this session. A send can also resume and re-task an in-process subagent
+# this session already has, and a forked or background Skill can start one with
+# no tool call this guard sees, so allowing this lets the primary extend that
+# Skill-started work. A recipient name gives no reliable signal for telling a
+# peer session from an in-process subagent, so this stays exact-name.
 # A separate list because neither the observe-or-stop nor the plan-only
 # rationale describes it; exact-name, so a variant that merely contains it, such
 # as SendMessageAndSpawn, still matches its stem and stays denied.

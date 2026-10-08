@@ -63,7 +63,8 @@ Four exclusions keep the shape test from producing false positives.
 - `PEER_MESSAGE_TOOLS`: the exact name `sendmessage` is allowed.
   It delivers text to a session that already exists and owns its own lifetime, such as a peer primary, the captain's own session, or another fleet's firstmate.
   That recipient is not work this session created, so it has no missing fleet record in this home and does not die with this session.
-  The one way a send could create work inside this session is resuming a subagent this session spawned, and the guard already denied that spawn.
+  It can also resume and re-task an in-process subagent this session already has, including one a forked or background `Skill` started with no tool call this guard sees, so allowing it lets the primary extend that Skill-started work.
+  A recipient name gives no reliable signal for telling a peer session from an in-process subagent, so the guard stays exact-name and accepts that gap, recorded under "Known residual gap".
   The cost of the false positive was concrete: a primary that needed to coordinate with a peer session could only ask the captain to relay by hand, and the only way out was `FM_ALLOW_SUBAGENT=1`, which also releases every work-creating tool.
 
 All three exclusion lists match the whole normalized name, never a substring, so none can widen by accident: `TaskCreateAgent`, `RemoteTaskCreate`, `SendMessageAndSpawn`, and `ListAgentsSpawn` stay denied.
@@ -117,7 +118,7 @@ In particular `TaskOutput`, `TaskStop`, `TaskGet`, `TaskList`, and `CronList` on
 The hook deliberately allows those five, so the shipped guard can never strand a runaway task with no way to inspect or end it, and it allows `TaskCreate` and `TaskUpdate` too, so it can never be the reason the primary cannot track its own plan.
 The two session-local todo tools are no longer recommended for local denial at all, because they write only the harness's session-local todo list, which has no executor and spawns nothing, so removing them from the schema removes no delegation power.
 Denying them there would instead reproduce at a stronger layer the exact false positive the shipped guard now avoids, leaving anyone who adopts this list verbatim unable to let a primary track its own plan.
-`SendMessage` is not on the recommended list for the same reason the hook allows it: messaging a session that already exists creates no work this home would lose.
+`SendMessage` is not on the recommended list for the same reason the hook allows it: messaging a session that already exists creates no new work, with the Skill-started subagent exception recorded under "Known residual gap".
 Narrowing the list further, including the five observe-or-stop names, is the captain's call, and this local list is the only layer that can remove a todo tool from the primary's schema.
 
 `permissions.allow` is a pre-approval list, not an availability list, so there is no fail-closed positive allowlist available.
@@ -387,3 +388,7 @@ The durable fix for that class is to make the guards treat "the primary is doing
 That would catch this class on any harness, including work created through `Bash`.
 This change fences only the Claude tool surface.
 That is a separate change to `bin/fm-supervision-lib.sh` and `bin/fm-turnend-guard.sh` and is out of scope here.
+
+The `SendMessage` allowance leaves one accepted gap.
+A forked or background `Skill` can start an in-process subagent with no tool call this guard sees, and `SendMessage` can then resume and re-task it, so the primary can extend that work with no fleet record and it still dies with the session.
+Telling that subagent apart from a peer session by recipient name has no reliable signal, so the guard stays exact-name rather than inspecting recipients.
